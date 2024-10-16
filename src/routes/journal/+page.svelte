@@ -1,16 +1,21 @@
-<script>
+<script lang="ts">
 	import { goto } from '$app/navigation';
+	import { createJournalEntry } from '../../service';
 
-	let journalEntry = '';
+	let journalContent = '';
 
-	const submitJournal = () => {
-		// Generate a simple unique ID (will come from the backend later)
-		const id = Date.now().toString();
-		// Store the journal in localStorage for now (later, will send it to the backend)
-		localStorage.setItem(id, journalEntry);
-
-		goto(`/journal/${id}`);
-	};
+	async function submitJournal() {
+		try {
+			const entry = await createJournalEntry(journalContent);
+			goto(`/journal/${entry.id}`);
+		} catch (err: unknown) {
+			if (err instanceof Error) {
+				alert(err.message);
+			} else {
+				alert('An unknown error occurred.');
+			}
+		}
+	}
 </script>
 
 <section class="p-8 bg-white min-h-screen">
@@ -18,7 +23,7 @@
 	<p class="mb-6 text-lg">Write down your thoughts below (supports Markdown):</p>
 
 	<textarea
-		bind:value={journalEntry}
+		bind:value={journalContent}
 		class="w-full h-64 p-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
 		placeholder="Start writing your journal entry here..."
 	></textarea>
