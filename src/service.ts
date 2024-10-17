@@ -29,7 +29,7 @@ export async function createJournalEntry(content: string): Promise<JournalEntry>
 
 export async function updateJournalEntry(id: number, content: string): Promise<JournalEntry> {
 	const response = await fetch(`${API_URL}/journal/${id}`, {
-		method: 'PUT',
+		method: 'PATCH',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({ content })
 	});
