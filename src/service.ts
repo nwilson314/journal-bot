@@ -1,6 +1,7 @@
 export interface JournalEntry {
 	id: number;
 	content: string;
+	analyzed_content?: string;
 	created_at: string;
 	updated_at: string;
 }
@@ -46,4 +47,18 @@ export async function deleteJournalEntry(id: number): Promise<void> {
 	if (!response.ok) {
 		throw new Error('Failed to delete journal entry');
 	}
+}
+
+export async function analyzeJournalEntry(id: number, content: string): Promise<JournalEntry> {
+	const response = await fetch(`${API_URL}/journal/${id}/analyze`, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ content })
+	});
+
+	if (!response.ok) {
+		throw new Error('Failed to analyze journal entry');
+	}
+
+	return response.json();
 }
